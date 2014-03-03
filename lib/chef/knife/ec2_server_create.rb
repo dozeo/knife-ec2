@@ -367,7 +367,9 @@ class Chef
         elastic_ip = connection.addresses.detect{|addr| addr if addr.public_ip == requested_elastic_ip}
 
         if locate_config_value(:spot_price)
-          spot_request = connection.spot_requests.create(create_server_def)
+          x = create_server_def()
+          x[:groups] = x[:security_group_ids]
+          spot_request = connection.spot_requests.create(x)
           msg_pair("Spot Request ID", spot_request.id)
           msg_pair("Spot Request Type", spot_request.request_type)
           msg_pair("Spot Price", spot_request.price)
